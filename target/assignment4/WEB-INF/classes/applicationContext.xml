@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/assignment4spring"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+    </bean>
+
+    <bean id="sessionFactoryUser" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+
+        <property name="annotatedClasses">
+            <list>
+                <value>com.nagarro.javaAdvance.assignment4.model.User</value>
+            </list>
+        </property>
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.show_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="sessionFactoryTshirt" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+
+        <property name="annotatedClasses">
+            <list>
+                <value>com.nagarro.javaAdvance.assignment4.model.Tshirt</value>
+                <value>com.nagarro.javaAdvance.assignment4.model.Brand</value>
+            </list>
+        </property>
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">create</prop>
+                <prop key="hibernate.show_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="templateUser" class="org.springframework.orm.hibernate5.HibernateTemplate">
+        <property name="sessionFactory" ref="sessionFactoryUser"/>
+    </bean>
+
+    <bean id="templateTshirt" class="org.springframework.orm.hibernate5.HibernateTemplate">
+        <property name="sessionFactory" ref="sessionFactoryTshirt"/>
+    </bean>
+
+    <bean id="userDao" class="com.nagarro.javaAdvance.assignment4.dao.UserDaoImplementation">
+        <property name="template" ref="templateUser"/>
+    </bean>
+
+    <bean id="tshirtDao" class="com.nagarro.javaAdvance.assignment4.dao.TshirtNBrandDaoImplementation">
+        <property name="template" ref="templateTshirt"/>
+    </bean>
+<!-- <bean id="hibernateTemplate" class="org.springframework.orm.hibernate5.HibernateTemplate">
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean> -->
+</beans>
